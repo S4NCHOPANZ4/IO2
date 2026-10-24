@@ -1,0 +1,51 @@
+<section id="pantalla-cuenta" class="pantalla" hidden>
+  <p class="sub"><span id="cuenta-yo"></span> contra <span id="cuenta-rival"></span></p>
+  <div id="cuenta-num" class="cuenta-num">3</div>
+</section>
+
+<section id="pantalla-partida" class="pantalla" hidden>
+  <div class="luchadores">
+    <div class="luchador yo">
+      <div class="nombre" id="nombre-yo"></div>
+      <div class="hp-fila"><span id="hp-yo">100</span><span class="hp-max">/100 HP</span></div>
+      <div class="pista"><div id="barra-yo" class="barra-hp ok"></div></div>
+      <span id="dano-yo" class="flotante" aria-hidden="true"></span>
+    </div>
+    <div class="luchador rival">
+      <div class="nombre" id="nombre-rival"></div>
+      <div class="hp-fila"><span id="hp-rival">100</span><span class="hp-max">/100 HP</span></div>
+      <div class="pista"><div id="barra-rival" class="barra-hp ok"></div></div>
+      <span id="dano-rival" class="flotante" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div id="aviso-rival" class="banner" hidden></div>
+
+  <div class="meta">
+    <span id="meta-ronda"></span>
+    <span id="meta-dif" class="etiqueta"></span>
+    <span id="meta-cat"></span>
+    <span class="segundos"><span id="segundos">0</span> s</span>
+  </div>
+  <div class="pista tiempo"><div id="barra-tiempo"></div></div>
+
+  <h2 id="pregunta" class="pregunta"></h2>
+  <div id="opciones" class="opciones"></div>
+  <p id="mensaje-ronda" class="mensaje" role="status"></p>
+</section>
+
+<section id="pantalla-final" class="pantalla" hidden>
+  <h1 id="final-titulo"></h1>
+  <p id="final-motivo" class="sub"></p>
+  <table class="tabla">
+    <thead><tr><th>Jugador</th><th>HP final</th><th>Daño total</th><th>Aciertos</th></tr></thead>
+    <tbody>
+      <tr id="fila-yo"></tr>
+      <tr id="fila-rival"></tr>
+    </tbody>
+  </table>
+  <div class="acciones">
+    <button id="btn-otra" class="primario">Jugar de nuevo</button>
+    <button id="btn-volver-lobby">Volver al lobby</button>
+  </div>
+</section>

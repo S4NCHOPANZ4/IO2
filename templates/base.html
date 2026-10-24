@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trivia Battle</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header>
+    <span class="logo">Trivia Battle</span>
+    <span id="codigo-badge" class="badge" hidden>Código de reconexión: <strong id="codigo-texto"></strong></span>
+  </header>
+  <div id="conexion" class="banner" hidden>Conexión perdida. Reconectando…</div>
+  <main>{% block contenido %}{% endblock %}</main>
+  <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+</body>
+</html>

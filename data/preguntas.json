@@ -1,0 +1,22 @@
+[
+  {"id": 1, "categoria": "Geografía", "dificultad": "facil", "pregunta": "¿Cuál es la capital de Colombia?", "opciones": ["Bogotá", "Medellín", "Cali", "Cartagena"], "correcta": 0},
+  {"id": 2, "categoria": "Ciencia", "dificultad": "facil", "pregunta": "¿Qué planeta es conocido como el planeta rojo?", "opciones": ["Venus", "Marte", "Júpiter", "Mercurio"], "correcta": 1},
+  {"id": 3, "categoria": "Geografía", "dificultad": "facil", "pregunta": "¿Cuál es el océano más grande del mundo?", "opciones": ["Atlántico", "Índico", "Pacífico", "Ártico"], "correcta": 2},
+  {"id": 4, "categoria": "Tecnología", "dificultad": "facil", "pregunta": "¿Qué significa «WWW» en una dirección web?", "opciones": ["World Wide Web", "World Web Window", "Wide World Web", "Web World Wide"], "correcta": 0},
+  {"id": 5, "categoria": "Animales", "dificultad": "facil", "pregunta": "¿Cuál es el animal terrestre más grande?", "opciones": ["Elefante africano", "Jirafa", "Rinoceronte", "Hipopótamo"], "correcta": 0},
+  {"id": 6, "categoria": "Matemáticas", "dificultad": "facil", "pregunta": "¿Cuánto es 7 × 8?", "opciones": ["54", "56", "58", "64"], "correcta": 1},
+  {"id": 7, "categoria": "Geografía", "dificultad": "facil", "pregunta": "¿En qué continente está Egipto?", "opciones": ["Asia", "Europa", "África", "Oceanía"], "correcta": 2},
+  {"id": 8, "categoria": "Literatura", "dificultad": "facil", "pregunta": "¿Quién escribió «Cien años de soledad»?", "opciones": ["Mario Vargas Llosa", "Julio Cortázar", "Gabriel García Márquez", "Pablo Neruda"], "correcta": 2},
+  {"id": 9, "categoria": "Ciencia", "dificultad": "media", "pregunta": "¿Cuál es el símbolo químico del oro?", "opciones": ["Ag", "Au", "Fe", "Go"], "correcta": 1},
+  {"id": 10, "categoria": "Geografía", "dificultad": "media", "pregunta": "¿Cuál es el río más largo de Sudamérica?", "opciones": ["Orinoco", "Magdalena", "Amazonas", "Paraná"], "correcta": 2},
+  {"id": 11, "categoria": "Tecnología", "dificultad": "media", "pregunta": "¿Quién creó el lenguaje de programación Python?", "opciones": ["James Gosling", "Guido van Rossum", "Dennis Ritchie", "Bjarne Stroustrup"], "correcta": 1},
+  {"id": 12, "categoria": "Historia", "dificultad": "media", "pregunta": "¿En qué año llegó el ser humano a la Luna por primera vez?", "opciones": ["1965", "1969", "1972", "1975"], "correcta": 1},
+  {"id": 13, "categoria": "Ciencia", "dificultad": "media", "pregunta": "¿Cuál es el hueso más largo del cuerpo humano?", "opciones": ["Húmero", "Tibia", "Fémur", "Radio"], "correcta": 2},
+  {"id": 14, "categoria": "Arte", "dificultad": "media", "pregunta": "¿Quién pintó «La noche estrellada»?", "opciones": ["Claude Monet", "Vincent van Gogh", "Pablo Picasso", "Salvador Dalí"], "correcta": 1},
+  {"id": 15, "categoria": "Geografía", "dificultad": "media", "pregunta": "¿Cuál es el país más grande del mundo por superficie?", "opciones": ["Canadá", "China", "Estados Unidos", "Rusia"], "correcta": 3},
+  {"id": 16, "categoria": "Tecnología", "dificultad": "media", "pregunta": "¿Qué protocolo se usa para cargar páginas web de forma segura?", "opciones": ["FTP", "HTTPS", "SMTP", "Telnet"], "correcta": 1},
+  {"id": 17, "categoria": "Ciencia", "dificultad": "dificil", "pregunta": "¿Cuál es el elemento más abundante en la corteza terrestre?", "opciones": ["Hierro", "Silicio", "Oxígeno", "Aluminio"], "correcta": 2},
+  {"id": 18, "categoria": "Historia", "dificultad": "dificil", "pregunta": "¿En qué año comenzó la Revolución Francesa?", "opciones": ["1776", "1789", "1799", "1804"], "correcta": 1},
+  {"id": 19, "categoria": "Matemáticas", "dificultad": "dificil", "pregunta": "¿Cuál es el valor aproximado del número e?", "opciones": ["2,718", "3,141", "1,618", "1,414"], "correcta": 0},
+  {"id": 20, "categoria": "Informática", "dificultad": "dificil", "pregunta": "¿Cuál es la complejidad de la búsqueda binaria en una lista ordenada?", "opciones": ["O(n)", "O(log n)", "O(n log n)", "O(1)"], "correcta": 1}
+]

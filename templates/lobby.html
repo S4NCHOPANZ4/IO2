@@ -1,0 +1,19 @@
+<section id="pantalla-lobby" class="pantalla" hidden>
+  <h1>Lobby</h1>
+  <p class="sub">Tus victorias: <strong id="mis-victorias">0</strong>. Busca una partida o mira una que ya esté en curso.</p>
+  <div class="acciones">
+    <button id="btn-lobby-buscar" class="primario">Buscar partida</button>
+    <button id="btn-salir">Salir del lobby</button>
+  </div>
+  <p id="aviso-lobby" class="aviso" role="status"></p>
+
+  <h2 class="seccion">Jugadores en línea (<span id="num-jugadores">0</span>)</h2>
+  <table class="tabla">
+    <thead><tr><th>Jugador</th><th>Victorias</th><th>Estado</th></tr></thead>
+    <tbody id="lista-jugadores"></tbody>
+  </table>
+
+  <h2 class="seccion">Partidas en curso</h2>
+  <p id="sin-partidas">No hay partidas ahora mismo. Pulsa «Buscar partida» para empezar una.</p>
+  <ul id="lista-partidas" class="lista"></ul>
+</section>

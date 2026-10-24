@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block contenido %}
+<section id="pantalla-inicio" class="pantalla">
+  <h1>Duelo de preguntas</h1>
+  <p class="sub">Entra al lobby, busca rival y responde bien y rápido: cinco preguntas, 100 puntos de vida cada uno.</p>
+  <label for="nombre">Tu nombre</label>
+  <input id="nombre" maxlength="16" autocomplete="off" placeholder="Si lo dejas vacío te asignamos uno">
+  <button id="btn-buscar" class="primario">Entrar al lobby</button>
+  <details>
+    <summary>¿Tienes un código de reconexión?</summary>
+    <input id="codigo-input" maxlength="6" autocomplete="off" placeholder="Ej. K7MQ2X">
+    <button id="btn-recuperar">Recuperar sesión</button>
+  </details>
+  <p id="aviso-inicio" class="aviso" role="status"></p>
+</section>
+
+{% include "lobby.html" %}
+
+<section id="pantalla-cola" class="pantalla" hidden>
+  <h1>Buscando oponente…</h1>
+  <p class="sub">Te emparejaremos en cuanto otro jugador entre a la cola.</p>
+  <div class="spinner" aria-hidden="true"></div>
+  <button id="btn-cancelar">Cancelar</button>
+</section>
+
+{% include "partida.html" %}
+{% include "espectador.html" %}
+{% endblock %}

@@ -1,0 +1,30 @@
+<section id="pantalla-espectador" class="pantalla" hidden>
+  <h1 class="chico">Modo espectador</h1>
+  <div class="luchadores">
+    <div class="luchador yo">
+      <div class="nombre" id="nombre-ea"></div>
+      <div class="hp-fila"><span id="hp-ea">100</span><span class="hp-max">/100 HP</span></div>
+      <div class="pista"><div id="barra-ea" class="barra-hp ok"></div></div>
+      <span id="dano-ea" class="flotante" aria-hidden="true"></span>
+    </div>
+    <div class="luchador rival">
+      <div class="nombre" id="nombre-eb"></div>
+      <div class="hp-fila"><span id="hp-eb">100</span><span class="hp-max">/100 HP</span></div>
+      <div class="pista"><div id="barra-eb" class="barra-hp ok"></div></div>
+      <span id="dano-eb" class="flotante" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="meta">
+    <span id="e-meta-ronda"></span>
+    <span id="e-meta-dif" class="etiqueta"></span>
+    <span id="e-meta-cat"></span>
+    <span class="segundos"><span id="e-segundos">0</span> s</span>
+  </div>
+  <div class="pista tiempo"><div id="e-barra-tiempo"></div></div>
+
+  <h2 id="e-pregunta" class="pregunta">Esperando la siguiente pregunta…</h2>
+  <div id="e-opciones" class="opciones"></div>
+  <p id="e-mensaje-ronda" class="mensaje" role="status"></p>
+  <button id="btn-espectador-volver">Volver al lobby</button>
+</section>
