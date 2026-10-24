@@ -4,9 +4,9 @@ import os
 HP_INICIAL = 100
 BONO_MAX = 10                       # bono de velocidad máximo (+10 de daño)
 DIFICULTADES = {                    # segundos por pregunta y daño base
-    "facil":   {"tiempo": 10, "dano": 10},
-    "media":   {"tiempo": 15, "dano": 15},
-    "dificil": {"tiempo": 20, "dano": 20},
+    "facil":   {"tiempo": 30, "dano": 10},
+    "media":   {"tiempo": 40, "dano": 15},
+    "dificil": {"tiempo": 60, "dano": 20},
 }
 ORDEN_DIFICULTAD = ["facil", "facil", "media", "media", "dificil"]  # 5 rondas
 
