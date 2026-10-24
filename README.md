@@ -17,9 +17,14 @@ Para jugar desde otro dispositivo en la misma red Wi-Fi, abre `http://IP-DE-TU-P
 
 ```bash
 python -m pytest                      # reglas: daño, ganador, desempate, cola
+TB_FEEDBACK=2 python app.py          # (otra terminal) servidor con corrección de 2 s para probar rápido
 python tests/simulacion.py            # dos bots juegan una partida completa (con el servidor encendido)
 python tests/simulacion_lobby.py      # lobby, victorias y espectador con tres bots
 ```
+
+## Corrección tras cada pregunta
+
+Cada pregunta del JSON trae un campo `feedback`. Al cerrarse la ronda, ambos jugadores (y los espectadores) ven la respuesta correcta y esa corrección durante **30 segundos**, con cuenta atrás, antes de la siguiente pregunta (o del resultado final). Se ajusta en `config.py` (`SEGUNDOS_FEEDBACK`). Para pruebas rápidas: `TB_FEEDBACK=2 python app.py`.
 
 ## Reglas rápidas
 
@@ -47,3 +52,11 @@ Cada sesión recibe un código de 6 caracteres (visible arriba a la derecha). Al
 6. Prueba con 3 o más dispositivos en la URL pública antes de la demo.
 
 Notas: un solo worker (el estado vive en memoria); cada nuevo despliegue o reinicio borra lobby, sesiones y partidas, así que no despliegues durante la demo. Alternativa gratuita: Render (servicio web gratuito, mismo comando de inicio), que se duerme tras 15 minutos sin tráfico.
+
+## Despliegue (Render, plan gratuito)
+
+1. Sube el proyecto a GitHub. Render → **New → Web Service** → conecta el repositorio.
+2. Build Command: `pip install -r requirements.txt`
+3. Start Command: `gunicorn -w 1 --threads 100 -b 0.0.0.0:$PORT app:app`
+4. Instance Type: **Free**. Crea el servicio y abre la URL `https://….onrender.com`.
+5. Un solo worker siempre. Abre la URL unos minutos antes de la demo para despertar el servicio.

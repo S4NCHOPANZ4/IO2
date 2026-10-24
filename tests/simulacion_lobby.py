@@ -1,5 +1,6 @@
 """Prueba de lobby, victorias y espectador contra un servidor ya en marcha (python app.py).
 Ana (acierta siempre) juega contra Beto (falla siempre) y Cami los mira desde el lobby.
+Arranca el servidor con TB_FEEDBACK=2 para que la prueba sea rápida (por defecto la corrección dura 30 s).
 Uso: python tests/simulacion_lobby.py [url]"""
 import json
 import sys
@@ -19,6 +20,7 @@ class Cliente:
         self.nombre, self.modo = nombre, modo
         self.sio = socketio.Client()
         self.lobby, self.eventos, self.fin = None, [], threading.Event()
+        self.rondas = []
         s = self.sio
 
         @s.on("lobby_state")
@@ -28,6 +30,9 @@ class Cliente:
         def _(d):
             c = CORRECTA[d["pregunta"]]
             s.emit("answer", {"opcion": c if self.modo == "bueno" else (c + 1) % 4})
+
+        @s.on("round_result")
+        def _(d): self.rondas.append(d)
 
         @s.on("game_over")
         def _(d): self.eventos.append(("game_over", d)); self.fin.set()
@@ -76,6 +81,11 @@ if __name__ == "__main__":
     assert all(c.fin.wait(60) for c in (ana, beto, cami)), "la partida no terminó"
     nombres = [e for e, _ in cami.eventos]
     assert "spec_state" in nombres and "spec_question" in nombres and "spec_round_result" in nombres
+    assert len(ana.rondas) == len(beto.rondas) == 5
+    assert all(r["feedback"] and r["pausa"] > 0 for r in ana.rondas)
+    assert [r["feedback"] for r in ana.rondas] == [r["feedback"] for r in beto.rondas], "ambos jugadores deben ver la misma corrección"
+    assert all(d["feedback"] for e, d in cami.eventos if e == "spec_round_result")
+    print("corrección enviada a ambos jugadores y al espectador en las 5 rondas: OK")
     over = next(d for e, d in cami.eventos if e == "spec_over")
     assert over["ganador"] == "Ana", over
     print(f"espectador recibió {nombres.count('spec_round_result')} rondas y el fin ({over['motivo']}): OK")

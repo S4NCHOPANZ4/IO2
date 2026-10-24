@@ -1,4 +1,5 @@
 """Simula dos jugadores contra un servidor ya en marcha (python app.py).
+Arranca el servidor con TB_FEEDBACK=2 (por defecto la corrección dura 30 s y esta prueba tardaría minutos).
 Uso: python tests/simulacion.py [url]   -> juega una partida completa de punta a punta."""
 import sys
 import threading
@@ -34,7 +35,7 @@ def jugador(nombre, acierta, log):
 
     sio.connect(URL)
     sio.emit("create_session", {"nombre": nombre})
-    estado["fin"].wait(timeout=90)
+    estado["fin"].wait(timeout=240)
     sio.disconnect()
     return estado["fin"].is_set()
 

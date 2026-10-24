@@ -27,6 +27,8 @@ class Partida:
         self.respuestas = {}        # pid -> (opcion, segundos)
         self.inicio = 0.0
         self.abandono = None        # pid del jugador que abandonó
+        self.ultimo = None          # resultado de la última ronda (por jugador)
+        self.fin_feedback = 0.0     # instante en que termina la pausa de corrección
         self._lock = threading.Lock()
 
     def rival(self, pid):
@@ -81,6 +83,7 @@ class Partida:
             rival = self.rival(pid)
             self.hp[rival] = max(0, self.hp[rival] - res[pid]["dano"])
             self.dano_total[pid] += res[pid]["dano"]
+        self.ultimo = res
         return res
 
     def terminada(self):

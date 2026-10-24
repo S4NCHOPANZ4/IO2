@@ -4,6 +4,13 @@ from game.questions import cargar, elegir
 from config import ORDEN_DIFICULTAD
 
 
+def test_banco_con_feedback():
+    for q in cargar():
+        assert len(q["opciones"]) == 4 and 0 <= q["correcta"] <= 3
+        assert q["dificultad"] in ("facil", "media", "dificil")
+        assert q["feedback"].strip(), f"falta feedback en la pregunta {q['id']}"
+
+
 def partida_demo():
     return Partida("a", "b", elegir(cargar()))
 

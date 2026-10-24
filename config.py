@@ -1,4 +1,5 @@
 """Constantes del juego. Todo lo ajustable vive aquí."""
+import os
 
 HP_INICIAL = 100
 BONO_MAX = 10                       # bono de velocidad máximo (+10 de daño)
@@ -11,7 +12,8 @@ ORDEN_DIFICULTAD = ["facil", "facil", "media", "media", "dificil"]  # 5 rondas
 
 MAX_LOBBY = 11                      # jugadores máximos en el lobby
 CUENTA_REGRESIVA = 3                # segundos antes de la primera pregunta
-PAUSA_RESULTADO = 3                 # segundos entre rondas
+# Segundos que se ve la corrección tras cada pregunta (TB_FEEDBACK=2 acelera las pruebas)
+SEGUNDOS_FEEDBACK = float(os.environ.get("TB_FEEDBACK", 20))
 TOLERANCIA = 0.5                    # margen por latencia al cerrar la ronda
 GRACIA_DESCONEXION = 30             # segundos para volver antes de perder
 SESION_INACTIVA = 600               # segundos para borrar sesiones desconectadas

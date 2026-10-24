@@ -9,6 +9,8 @@
     codigoInvalido: "Código no válido o sesión vencida.",
     demasiados: "Demasiados intentos. Recarga la página.",
     sinSesion: "No hay sesión activa. Vuelve a entrar.",
+    siguienteEn: s => `Siguiente pregunta en ${s} s`,
+    resultadoEn: s => `Resultado final en ${s} s`,
     lobbyLleno: "El lobby está lleno (11 jugadores). Inténtalo de nuevo en un momento.",
     partidaTerminada: "Esa partida ya terminó o no se puede ver.",
     estado: { lobby: "En el lobby", buscando: "Buscando partida", jugando: "Jugando", espectando: "Viendo una partida" },
@@ -39,7 +41,7 @@
   const $ = id => document.getElementById(id);
   const PANTALLAS = ["inicio", "lobby", "cola", "cuenta", "partida", "final", "espectador"];
   const socket = io();
-  const st = { entrando: false, manual: false, yo: null, seleccion: null, raf: 0, fin: 0, dur: 1, cuenta: 0, pref: "", esp: { a: "", b: "" } };
+  const st = { entrando: false, manual: false, yo: null, seleccion: null, raf: 0, fin: 0, dur: 1, cuenta: 0, pref: "", etiqueta: null, esp: { a: "", b: "" } };
 
   const guardado = () => { try { return sessionStorage.getItem("tb_codigo"); } catch { return null; } };
   const guardar = c => { try { c ? sessionStorage.setItem("tb_codigo", c) : sessionStorage.removeItem("tb_codigo"); } catch {} };
@@ -92,6 +94,7 @@
     const restante = Math.max(0, (st.fin - performance.now()) / 1000);
     $(st.pref + "barra-tiempo").style.width = (restante / st.dur * 100) + "%";
     $(st.pref + "segundos").textContent = Math.ceil(restante);
+    if (st.etiqueta) $(st.pref + "siguiente").textContent = st.etiqueta(Math.ceil(restante));
     if (restante > 0) st.raf = requestAnimationFrame(tick);
   }
 
@@ -106,6 +109,10 @@
     $(pref + "meta-cat").textContent = d.categoria;
     $(pref + "pregunta").textContent = d.pregunta;
     $(pref + "mensaje-ronda").textContent = "";
+    $(pref + "feedback").hidden = true;
+    $(pref + "siguiente").textContent = "";
+    $(pref + "barra-tiempo").parentElement.classList.remove("pausa");
+    st.etiqueta = null;
     const cont = $(pref + "opciones");
     cont.replaceChildren();
     d.opciones.forEach((texto, i) => {
@@ -126,6 +133,31 @@
     botones.forEach(b => { b.disabled = true; });
     if (botones[correcta]) botones[correcta].classList.add("correcta");
     if (elegida !== null && elegida !== correcta && botones[elegida]) botones[elegida].classList.add("incorrecta");
+  }
+
+  // Pausa de corrección: pregunta cerrada, respuesta correcta y explicación con cuenta atrás
+  function revisar(d, pref, elegida) {
+    cancelAnimationFrame(st.raf);
+    $(pref + "meta-ronda").textContent = TEXTOS.ronda(d.ronda, d.total);
+    $(pref + "meta-dif").textContent = TEXTOS.dificultad[d.dificultad];
+    $(pref + "meta-cat").textContent = d.categoria;
+    $(pref + "pregunta").textContent = d.pregunta;
+    const cont = $(pref + "opciones");
+    cont.replaceChildren();
+    d.opciones.forEach(texto => {
+      const b = document.createElement("button");
+      b.textContent = texto;
+      cont.appendChild(b);
+    });
+    marcarCorrecta(pref, d.correcta, elegida);
+    $(pref + "feedback-texto").textContent = d.feedback;
+    $(pref + "feedback").hidden = false;
+    $(pref + "barra-tiempo").parentElement.classList.add("pausa");
+    st.pref = pref;
+    st.dur = d.pausa;
+    st.fin = performance.now() + d.restante_pausa * 1000;
+    st.etiqueta = d.ultima ? TEXTOS.resultadoEn : TEXTOS.siguienteEn;
+    tick();
   }
 
   // ---------- conexión y sesión ----------
@@ -219,12 +251,13 @@
   });
 
   socket.on("round_result", d => {
-    cancelAnimationFrame(st.raf);
-    marcarCorrecta("", d.correcta, st.seleccion);
+    revisar(d, "", d.elegida);
+    mostrar("partida");
     setHp("yo", d.yo.hp);
     setHp("rival", d.rival.hp);
-    if (d.rival.dano > 0) flotante("yo", d.rival.dano);
-    if (d.yo.dano > 0) flotante("rival", d.yo.dano);
+    const nuevo = d.restante_pausa > d.pausa - 2;      // no repetir la animación al reconectar
+    if (nuevo && d.rival.dano > 0) flotante("yo", d.rival.dano);
+    if (nuevo && d.yo.dano > 0) flotante("rival", d.yo.dano);
     const propio = d.yo.correcto ? TEXTOS.acertaste(d.yo.dano) : (d.yo.respondio ? TEXTOS.fallaste : TEXTOS.sinResponder);
     const ajeno = d.rival.dano > 0 ? TEXTOS.recibiste(d.rival.dano) : TEXTOS.sinDanoRival;
     $("mensaje-ronda").textContent = propio + " " + ajeno;
@@ -261,14 +294,15 @@
     $("e-pregunta").textContent = "Esperando la siguiente pregunta…";
     $("e-opciones").replaceChildren();
     $("e-mensaje-ronda").textContent = "";
+    $("e-feedback").hidden = true;
+    $("e-siguiente").textContent = "";
     mostrar("espectador");
   });
 
   socket.on("spec_question", d => renderPregunta(d, "e-", false));
 
   socket.on("spec_round_result", d => {
-    cancelAnimationFrame(st.raf);
-    marcarCorrecta("e-", d.correcta, null);
+    revisar(d, "e-", null);
     setHp("ea", d.a.hp);
     setHp("eb", d.b.hp);
     if (d.b.dano > 0) flotante("ea", d.b.dano);

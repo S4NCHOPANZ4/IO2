@@ -64,6 +64,32 @@ def payload_pregunta(p, pid=None):
     }
 
 
+def payload_revision(p):
+    """Pregunta ya cerrada con la respuesta correcta y su corrección, para la pausa entre rondas."""
+    q = p.pregunta
+    return {
+        "ronda": p.ronda + 1, "total": len(p.preguntas),
+        "categoria": q["categoria"], "dificultad": q["dificultad"],
+        "pregunta": q["pregunta"], "opciones": q["opciones"],
+        "correcta": q["correcta"], "feedback": q["feedback"],
+        "pausa": C.SEGUNDOS_FEEDBACK,
+        "restante_pausa": max(0.0, p.fin_feedback - time.monotonic()),
+        "ultima": p.terminada(),
+    }
+
+
+def resultado_jugador(p, pid):
+    rival = p.rival(pid)
+    return {**payload_revision(p), "elegida": p.respuestas.get(pid, (None,))[0],
+            "yo": {**p.ultimo[pid], "hp": p.hp[pid]},
+            "rival": {**p.ultimo[rival], "hp": p.hp[rival]}}
+
+
+def resultado_espectador(p):
+    a, b = p.jugadores
+    return {**payload_revision(p), "a": {**p.ultimo[a], "hp": p.hp[a]}, "b": {**p.ultimo[b], "hp": p.hp[b]}}
+
+
 def estadisticas(p, pid):
     return {"nombre": sesiones.por_id(pid).nombre, "hp": p.hp[pid],
             "dano_total": p.dano_total[pid], "aciertos": p.aciertos[pid]}
@@ -151,6 +177,8 @@ def on_reconnect(data):
                              "hp_yo": p.hp[s.id], "hp_rival": p.hp[rival], "total": len(p.preguntas)})
             if p.estado == "pregunta":
                 emit("question", payload_pregunta(p, s.id))
+            elif p.estado == "resultado" and p.ultimo:       # volvió durante la corrección
+                emit("round_result", resultado_jugador(p, s.id))
         elif s.estado == "en_cola":
             emit("queue_status", {"en_cola": True})
         else:
@@ -247,6 +275,8 @@ def on_spectate(data):
                             "hp_a": p.hp[a], "hp_b": p.hp[b], "total": len(p.preguntas)})
         if p.estado == "pregunta":
             emit("spec_question", payload_pregunta(p))
+        elif p.estado == "resultado" and p.ultimo:
+            emit("spec_round_result", resultado_espectador(p))
         emitir_lobby()
 
 
@@ -274,9 +304,8 @@ def on_answer(data):
 
 
 def correr_partida(p):
-    """Bucle de rondas. El servidor decide cuándo termina cada una."""
+    """Bucle de rondas. El servidor decide cuándo termina cada ronda y cada pausa de corrección."""
     socketio.sleep(C.CUENTA_REGRESIVA)
-    a, b = p.jugadores
     while not p.abandono:
         p.iniciar_ronda()
         pregunta = {**payload_pregunta(p), "respondida": False}
@@ -287,22 +316,16 @@ def correr_partida(p):
             socketio.sleep(0.1)
         if p.abandono:
             break
-        res = p.resolver()
+        p.resolver()
+        p.fin_feedback = time.monotonic() + C.SEGUNDOS_FEEDBACK
         for pid in p.jugadores:
-            rival = p.rival(pid)
-            enviar("round_result", {
-                "ronda": p.ronda + 1, "correcta": p.pregunta["correcta"],
-                "yo": {**res[pid], "hp": p.hp[pid]},
-                "rival": {**res[rival], "hp": p.hp[rival]},
-            }, sesiones.por_id(pid))
-        socketio.emit("spec_round_result", {
-            "ronda": p.ronda + 1, "correcta": p.pregunta["correcta"],
-            "a": {**res[a], "hp": p.hp[a]}, "b": {**res[b], "hp": p.hp[b]},
-        }, to=sala_espectadores(p))
+            enviar("round_result", resultado_jugador(p, pid), sesiones.por_id(pid))
+        socketio.emit("spec_round_result", resultado_espectador(p), to=sala_espectadores(p))
         emitir_lobby()                      # actualiza HP y ronda en «Partidas en curso»
-        if p.terminada():
+        while not p.abandono and time.monotonic() < p.fin_feedback:
+            socketio.sleep(0.2)             # ambos jugadores leen la corrección
+        if p.abandono or p.terminada():
             break
-        socketio.sleep(C.PAUSA_RESULTADO)
     finalizar(p)
 
 

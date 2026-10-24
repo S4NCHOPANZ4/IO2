@@ -327,3 +327,13 @@ Referencias: <https://render.com/docs/free> y <https://www.koyeb.com/docs/run-an
 - **Modo espectador:** desde el lobby, «Ver partida» une al jugador a una sala de solo lectura. Recibe el estado actual, la pregunta con el tiempo restante real, el resultado de cada ronda (sin revelar la respuesta antes del cierre) y el final. Al terminar la partida, vuelve al lobby con el botón.
 - **Reglas del espectador:** solo puede ver quien está libre en el lobby (no en cola ni en partida). Si se desconecta, vuelve al lobby al reconectar.
 - **Eventos nuevos:** cliente→servidor `leave_session`, `spectate`, `leave_spectate`; servidor→cliente `lobby_state`, `session_closed`, `spec_state`, `spec_question`, `spec_round_result`, `spec_over`.
+
+---
+
+## 18. Corrección (feedback) tras cada pregunta
+
+- Cada pregunta del JSON incluye `feedback`: una explicación corta de la respuesta correcta.
+- Al cerrarse una ronda, el servidor envía `round_result` (jugadores) y `spec_round_result` (espectadores) con la pregunta, la respuesta correcta y el feedback. Los dos jugadores ven exactamente lo mismo durante `SEGUNDOS_FEEDBACK` (30 s), con cuenta atrás en la barra de tiempo.
+- El servidor controla la pausa: la siguiente pregunta (o el resultado final) llega al terminar esos 30 s, también tras la quinta pregunta y tras un KO.
+- Si un jugador se reconecta durante la pausa, recibe de nuevo la corrección con el tiempo restante real.
+- Efecto en la duración: una partida de 5 preguntas pasa de ~1 minuto a ~3 minutos.
